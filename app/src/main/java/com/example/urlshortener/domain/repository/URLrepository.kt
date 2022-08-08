@@ -1,7 +1,6 @@
 package com.example.urlshortener.domain.repository
 
-import com.example.urlshortener.domain.model.URL
-import kotlinx.coroutines.flow.MutableStateFlow
+import com.example.urlshortener.data.model.URL
 
 interface URLrepository {
 

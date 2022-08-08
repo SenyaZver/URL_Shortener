@@ -3,8 +3,10 @@ package com.example.urlshortener.presentation.main_screen
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -18,6 +20,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -25,6 +28,7 @@ import androidx.constraintlayout.compose.ConstraintSet
 import androidx.constraintlayout.compose.layoutId
 
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.urlshortener.presentation.theme.URLShortenerTheme
 
 @Composable
 fun MainScreen(
@@ -75,7 +79,7 @@ fun MainScreen(
             }
 
             constrain(convertButton) {
-                top.linkTo(resultTextField.bottom, margin = 50.dp)
+                top.linkTo(enterTextField.bottom, margin = 95.dp)
                 start.linkTo(parent.start)
                 end.linkTo(parent.end)
             }
@@ -84,9 +88,25 @@ fun MainScreen(
         ConstraintLayout(constraintSet = constraints, modifier = Modifier.fillMaxSize()) {
             Title(Modifier.layoutId("title"))
 
+
+//            Box(modifier = Modifier
+//                .background(MaterialTheme.colors.surface)
+//                .layoutId("enterText")
+//                .padding(10.dp),
+//            ) {
+//                Text(
+//                    text = "Enter your URL here!",
+//                    color = MaterialTheme.colors.onSurface
+//                )
+//            }
+
             Text(
-                modifier = Modifier.layoutId("enterText"),
-                text = "Enter your URL here!"
+                modifier = Modifier
+                    .layoutId("enterText")
+                    .background(MaterialTheme.colors.surface)
+                    .padding(10.dp),
+                text = "Enter your URL here!",
+                color = MaterialTheme.colors.onSurface,
             )
 
             var URLtextField by rememberSaveable { mutableStateOf("") }
@@ -102,20 +122,10 @@ fun MainScreen(
                 label = { Text(text = "URL") }
             )
 
-            Text(
-                modifier = Modifier.layoutId("resultText"),
-                text = "Here is a shorter URL!"
-            )
-
-            Text(
-                modifier = Modifier
-                    .layoutId("resultTextField"),
-                text = state.currentURL?.short_address ?: "*shorter URL*",
-                fontSize = 25.sp
-            )
 
             OutlinedButton(
-                modifier = Modifier.layoutId("convertButton")
+                modifier = Modifier
+                    .layoutId("convertButton")
                     .fillMaxWidth(0.3f)
                     .fillMaxHeight(0.08f),
                 colors = ButtonDefaults.buttonColors(MaterialTheme.colors.surface),
@@ -143,9 +153,20 @@ fun MainScreen(
                 Toast.makeText(context, state.error, Toast.LENGTH_SHORT).show()
             }
 
+            if (state.currentURL!= null) {
+                Text(
+                    modifier = Modifier.layoutId("resultText"),
+                    text = "Here is a shorter URL!"
+                )
 
+                SelectionContainer(modifier = Modifier.layoutId("resultTextField")) {
+                    Text(
+                        text = state.currentURL.short_address ?: "",
+                        fontSize = 25.sp
+                    )
+                }
 
-
+            }
 
 
         }
@@ -181,7 +202,7 @@ fun Title(modifier: Modifier) {
                         append("S")
                     }
 
-                    withStyle(SpanStyle(color = MaterialTheme.colors.secondaryVariant)) {
+                    withStyle(SpanStyle(color = MaterialTheme.colors.onSurface)) {
                         append("hortener")
                     }
 
@@ -191,6 +212,19 @@ fun Title(modifier: Modifier) {
                     .align(Alignment.Center)
 
             )
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun DefaultPreview() {
+    URLShortenerTheme {
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = MaterialTheme.colors.background
+        ) {
+            MainScreen()
         }
     }
 }

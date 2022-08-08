@@ -1,4 +1,4 @@
-package com.example.urlshortener.domain.model
+package com.example.urlshortener.data.model
 
 data class URL(
     val address: String,

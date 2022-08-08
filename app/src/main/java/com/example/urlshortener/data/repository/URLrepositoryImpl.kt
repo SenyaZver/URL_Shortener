@@ -1,9 +1,8 @@
 package com.example.urlshortener.data.repository
 
-import com.example.urlshortener.data.DataProvider
-import com.example.urlshortener.domain.model.URL
+import com.example.urlshortener.data.remote.DataProvider
+import com.example.urlshortener.data.model.URL
 import com.example.urlshortener.domain.repository.URLrepository
-import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
 
 class URLrepositoryImpl @Inject constructor(private val dataProvider: DataProvider) : URLrepository {

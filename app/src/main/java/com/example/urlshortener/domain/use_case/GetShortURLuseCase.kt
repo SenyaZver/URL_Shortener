@@ -16,7 +16,9 @@ class GetShortURLuseCase @Inject constructor(private val repository: URLreposito
         try {
             emit(Status.Loading<String>())
 
-            val shortAddress = repository.getShortURL(address)
+            val formattedAddress = formatAddress(address)
+
+            val shortAddress = repository.getShortURL(formattedAddress)
 
             emit(Status.Success<String>(shortAddress))
             repository.addURL(URL(address, shortAddress))
@@ -28,6 +30,14 @@ class GetShortURLuseCase @Inject constructor(private val repository: URLreposito
         }
 
 
+    }
+
+    private fun formatAddress(address: String): String {
+        var formattedAddress = address
+        if (address.subSequence(0,3) != "http") {
+            formattedAddress = "http://" + address
+        }
+        return formattedAddress
     }
 
 

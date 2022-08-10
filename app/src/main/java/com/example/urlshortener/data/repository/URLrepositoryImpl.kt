@@ -19,6 +19,9 @@ class URLrepositoryImpl @Inject constructor(private val dataProvider: DataProvid
     }
 
     override suspend fun getShortURL(address: String): String {
-        return dataProvider.provideShortURL(address)
+        val shortAddress = dataProvider.provideShortURL(address)
+        addURL(URL(address, shortAddress))
+
+        return shortAddress
     }
 }

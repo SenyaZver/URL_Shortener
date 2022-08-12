@@ -10,5 +10,7 @@ interface URLrepository {
 
     suspend fun getShortURL(address: String): String
 
+    suspend fun clearRepository()
+
 
 }

@@ -23,16 +23,16 @@ class MainScreenViewModel @Inject constructor(
     fun getShortURL(address: String) {
         viewModelScope.launch {
 
-            getShortURLuseCase.execute(address).collect {result ->
-                when(result) {
+            getShortURLuseCase.execute(address).collect {status ->
+                when(status) {
                     is Status.Loading -> {
                         _state.value = MainScreenState(isLoading = true)
                     }
                     is Status.Success -> {
-                        _state.value = MainScreenState(currentURL = URL(address, result.data))
+                        _state.value = MainScreenState(currentURL = URL(address, status.data))
                     }
                     is Status.Error -> {
-                        val message = result.message ?: "Unexpected error occured"
+                        val message = status.message ?: "Unexpected error occured"
                         _state.value = MainScreenState(isLoading = false, error = message)
                     }
                 }

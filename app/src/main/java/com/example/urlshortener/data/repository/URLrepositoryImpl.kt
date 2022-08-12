@@ -24,4 +24,8 @@ class URLrepositoryImpl @Inject constructor(private val dataProvider: DataProvid
 
         return shortAddress
     }
+
+    override suspend fun clearRepository() {
+        URL_list.clear()
+    }
 }

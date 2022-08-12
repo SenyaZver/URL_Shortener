@@ -28,11 +28,14 @@ import androidx.constraintlayout.compose.ConstraintSet
 import androidx.constraintlayout.compose.layoutId
 
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import com.example.urlshortener.common.Constants.historyScreenRoute
 import com.example.urlshortener.presentation.theme.URLShortenerTheme
 
 @Composable
 fun MainScreen(
-    viewModel: MainScreenViewModel = hiltViewModel()
+    viewModel: MainScreenViewModel = hiltViewModel(),
+    navController: NavController
 ) {
 
     val state = viewModel.state.value
@@ -47,6 +50,7 @@ fun MainScreen(
             val resultText = createRefFor("resultText")
             val resultTextField = createRefFor("resultTextField")
             val convertButton = createRefFor("convertButton")
+            val navigateToHistoryButton = createRefFor("navigateToHistoryButton")
 
             constrain(title) {
                 top.linkTo(parent.top, margin = 20.dp)
@@ -80,6 +84,12 @@ fun MainScreen(
 
             constrain(convertButton) {
                 top.linkTo(enterTextField.bottom, margin = 95.dp)
+                start.linkTo(parent.start)
+                end.linkTo(parent.end)
+            }
+
+            constrain(navigateToHistoryButton) {
+                top.linkTo(convertButton.bottom, margin = 50.dp)
                 start.linkTo(parent.start)
                 end.linkTo(parent.end)
             }
@@ -138,6 +148,26 @@ fun MainScreen(
                 },
                 onClick = {
                     viewModel.getShortURL(URLtextField)
+                },
+                border = BorderStroke(width = 5.dp, color = Color.Black),
+                shape = RoundedCornerShape(20.dp),
+            )
+
+            OutlinedButton(
+                modifier = Modifier
+                    .layoutId("navigateToHistoryButton")
+                    .fillMaxWidth(0.3f)
+                    .fillMaxHeight(0.08f),
+                colors = ButtonDefaults.buttonColors(MaterialTheme.colors.surface),
+                content = {
+                    Text(
+                        text = "History",
+                        color = MaterialTheme.colors.secondary,
+                        fontSize = 20.sp
+                    )
+                },
+                onClick = {
+                    navController.navigate(historyScreenRoute)
                 },
                 border = BorderStroke(width = 5.dp, color = Color.Black),
                 shape = RoundedCornerShape(20.dp),
@@ -216,15 +246,15 @@ fun Title(modifier: Modifier) {
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    URLShortenerTheme {
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colors.background
-        ) {
-            MainScreen()
-        }
-    }
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun DefaultPreview() {
+//    URLShortenerTheme {
+//        Surface(
+//            modifier = Modifier.fillMaxSize(),
+//            color = MaterialTheme.colors.background
+//        ) {
+//            MainScreen()
+//        }
+//    }
+//}

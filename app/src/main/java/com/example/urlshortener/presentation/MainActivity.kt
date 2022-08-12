@@ -27,6 +27,12 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
 import androidx.constraintlayout.compose.layoutId
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.example.urlshortener.common.Constants.historyScreenRoute
+import com.example.urlshortener.common.Constants.mainScreenRoute
+import com.example.urlshortener.presentation.history_screen.HistoryScreen
 import com.example.urlshortener.presentation.main_screen.MainScreen
 import com.example.urlshortener.presentation.theme.URLShortenerTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -37,27 +43,34 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+
             URLShortenerTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    MainScreen()
+                    val navController = rememberNavController()
+
+                    NavHost(
+                        navController = navController,
+                        startDestination = mainScreenRoute
+                    ) {
+                        composable(route = mainScreenRoute) {
+                            MainScreen(navController = navController)
+                        }
+
+                        composable(route = historyScreenRoute) {
+                            HistoryScreen()
+                        }
+                    }
+
+
+
+
+
+
                 }
             }
-        }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    URLShortenerTheme {
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colors.background
-        ) {
-            MainScreen()
         }
     }
 }

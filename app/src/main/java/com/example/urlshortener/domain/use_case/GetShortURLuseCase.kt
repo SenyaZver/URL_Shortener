@@ -1,6 +1,7 @@
 package com.example.urlshortener.domain.use_case
 
 
+import android.util.Log
 import com.example.urlshortener.common.Status
 import com.example.urlshortener.data.model.URL
 import com.example.urlshortener.domain.repository.URLrepository
@@ -17,11 +18,10 @@ class GetShortURLuseCase @Inject constructor(private val repository: URLreposito
             emit(Status.Loading<String>())
 
             val formattedAddress = formatAddress(address)
-
             val shortAddress = repository.getShortURL(formattedAddress)
 
             emit(Status.Success<String>(shortAddress))
-            repository.addURL(URL(address, shortAddress))
+
 
         } catch(e: HttpException) {
             emit(Status.Error<String>(e.localizedMessage ?: "An unexpected error occured"))

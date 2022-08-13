@@ -4,6 +4,7 @@ import com.example.urlshortener.common.Constants.BASE_URL
 import com.example.urlshortener.data.remote.DataProvider
 import com.example.urlshortener.data.repository.URLrepositoryImpl
 import com.example.urlshortener.data.remote.CleanUriApi
+import com.example.urlshortener.domain.AddressFormatter
 import com.example.urlshortener.domain.repository.URLrepository
 import dagger.Module
 import dagger.Provides
@@ -29,6 +30,12 @@ class AppModule {
     @Singleton
     fun getRepository(): URLrepository {
         return URLrepositoryImpl(getDataProvider())
+    }
+
+    @Provides
+    @Singleton
+    fun getFormetter(): AddressFormatter {
+        return AddressFormatter()
     }
 
     @Provides

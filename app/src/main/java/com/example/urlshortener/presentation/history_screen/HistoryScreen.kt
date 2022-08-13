@@ -39,7 +39,7 @@ fun HistoryScreen(
 
         LazyColumn {
             items(state.URL_list.size) { index ->
-                Text(text = state.URL_list[index].address)
+                URLcard(state.URL_list[index])
             }
         }
 

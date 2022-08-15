@@ -2,20 +2,24 @@ package com.example.urlshortener.data.repository
 
 import com.example.urlshortener.data.remote.DataProvider
 import com.example.urlshortener.data.model.URL
+import com.example.urlshortener.data.room.URLdao
 import com.example.urlshortener.domain.repository.URLrepository
+import dagger.assisted.AssistedInject
 import javax.inject.Inject
 
-class URLrepositoryImpl @Inject constructor(private val dataProvider: DataProvider) : URLrepository {
+class URLrepositoryImpl @Inject constructor(
+    private val dataProvider: DataProvider,
+    private val URLdao: URLdao
+    ): URLrepository {
 
-    private var URL_list = mutableListOf<URL>()
 
 
     override suspend fun getAllURLs(): MutableList<URL> {
-        return URL_list
+        return URLdao.getAllURLs()
     }
 
     override suspend fun addURL(url: URL) {
-        URL_list.add(url)
+        URLdao.insertURL(url)
     }
 
     override suspend fun getShortURL(address: String): String {
@@ -26,6 +30,6 @@ class URLrepositoryImpl @Inject constructor(private val dataProvider: DataProvid
     }
 
     override suspend fun clearRepository() {
-        URL_list.clear()
+        URLdao.clearDataBase()
     }
 }

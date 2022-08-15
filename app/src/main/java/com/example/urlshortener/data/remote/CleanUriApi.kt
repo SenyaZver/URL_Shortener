@@ -1,7 +1,6 @@
 package com.example.urlshortener.data.remote
 
-import com.example.urlshortener.data.remote.GetURLresponse
-import retrofit2.Call
+import com.example.urlshortener.data.remote.response.GetURLresponse
 import retrofit2.http.*
 
 interface CleanUriApi {

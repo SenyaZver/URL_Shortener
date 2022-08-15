@@ -3,11 +3,12 @@ package com.example.urlshortener.presentation.main_screen
 import androidx.compose.runtime.State
 import androidx.lifecycle.ViewModel
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.viewModelScope
 import com.example.urlshortener.common.Status
 import com.example.urlshortener.data.model.URL
 import com.example.urlshortener.domain.use_case.GetShortURLuseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -21,7 +22,7 @@ class MainScreenViewModel @Inject constructor(
 
 
     fun getShortURL(address: String) {
-        viewModelScope.launch {
+        CoroutineScope(Dispatchers.IO).launch {
 
             getShortURLuseCase.execute(address).collect {status ->
                 when(status) {

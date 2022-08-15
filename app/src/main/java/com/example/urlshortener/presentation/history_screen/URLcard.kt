@@ -46,7 +46,8 @@ fun URLcard(url: URL, modifier: Modifier = Modifier) {
             SelectionContainer {
                 Text(
                     text = url.address,
-                    Modifier.horizontalScroll(scroll)
+                    color = MaterialTheme.colors.onSurface,
+                    modifier = Modifier.horizontalScroll(scroll)
                 )
             }
 
@@ -55,6 +56,7 @@ fun URLcard(url: URL, modifier: Modifier = Modifier) {
             )
             SelectionContainer {
                 Text(
+                    color = MaterialTheme.colors.onSurface,
                     text = url.short_address!!
                 )
             }

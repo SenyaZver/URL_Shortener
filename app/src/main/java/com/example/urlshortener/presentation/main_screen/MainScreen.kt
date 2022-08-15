@@ -6,6 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -16,10 +17,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.ClipboardManager
+import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.semantics.SemanticsActions.OnClick
+import androidx.compose.ui.text.*
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -32,6 +34,8 @@ import androidx.navigation.NavController
 import com.example.urlshortener.common.Constants.historyScreenRoute
 import com.example.urlshortener.presentation.theme.URLShortenerTheme
 
+
+//better use a Column, but I used Constraint just to practice
 @Composable
 fun MainScreen(
     viewModel: MainScreenViewModel = hiltViewModel(),
@@ -39,10 +43,10 @@ fun MainScreen(
 ) {
 
     val state = viewModel.state.value
-
+    val clipboardManager: ClipboardManager = LocalClipboardManager.current
+    val context = LocalContext.current
 
     Box(modifier = Modifier.fillMaxSize()) {
-        val context = LocalContext.current
         val constraints = ConstraintSet {
             val title = createRefFor("title")
             val enterText = createRefFor("enterText")
@@ -51,6 +55,7 @@ fun MainScreen(
             val resultTextField = createRefFor("resultTextField")
             val convertButton = createRefFor("convertButton")
             val navigateToHistoryButton = createRefFor("navigateToHistoryButton")
+            val loadingIndicator = createRefFor("loadingIndicator")
 
             constrain(title) {
                 top.linkTo(parent.top, margin = 20.dp)
@@ -77,6 +82,12 @@ fun MainScreen(
             }
 
             constrain(resultTextField) {
+                top.linkTo(resultText.bottom, margin = 5.dp)
+                start.linkTo(parent.start)
+                end.linkTo(parent.end)
+            }
+
+            constrain(loadingIndicator) {
                 top.linkTo(resultText.bottom, margin = 5.dp)
                 start.linkTo(parent.start)
                 end.linkTo(parent.end)
@@ -160,6 +171,7 @@ fun MainScreen(
                     .fillMaxHeight(0.08f),
                 colors = ButtonDefaults.buttonColors(MaterialTheme.colors.surface),
                 content = {
+
                     Text(
                         text = "History",
                         color = MaterialTheme.colors.secondary,
@@ -171,12 +183,13 @@ fun MainScreen(
                 },
                 border = BorderStroke(width = 5.dp, color = Color.Black),
                 shape = RoundedCornerShape(20.dp),
+
             )
 
 
 
             if (state.isLoading) {
-                Toast.makeText(context, "Loading", Toast.LENGTH_SHORT).show()
+                CircularProgressIndicator(modifier = Modifier.layoutId("loadingIndicator"))
             }
 
             if (state.error.isNotEmpty()) {
@@ -190,9 +203,15 @@ fun MainScreen(
                 )
 
                 SelectionContainer(modifier = Modifier.layoutId("resultTextField")) {
-                    Text(
-                        text = state.currentURL.short_address ?: "",
-                        fontSize = 25.sp
+                    ClickableText(
+                        text = AnnotatedString(state.currentURL.short_address ?: ""),
+                        style = TextStyle(fontSize = 25.sp),
+                        onClick = {
+                            clipboardManager.setText(AnnotatedString(state.currentURL.short_address ?: ""))
+
+
+                            Toast.makeText(context, "Copied!", Toast.LENGTH_SHORT).show()
+                        }
                     )
                 }
 
